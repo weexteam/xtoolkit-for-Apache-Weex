@@ -8,16 +8,14 @@ const logger = require('./util/logger');
 const hook = require('./util/hook');
 const config = require('./util/config');
 class Command {
-  constructor (command, packageInfo, args = [], description) {
+  constructor(command, packageInfo, args = [], description) {
     this.command = command;
     if (typeof packageInfo === 'string') {
       const [schema, meta] = packageInfo.split(':');
       this.package = Package.getInstance(schema, meta);
-    }
-    else if (typeof packageInfo === 'function') {
+    } else if (typeof packageInfo === 'function') {
       this.package = Package.getInstance('local', '', packageInfo);
-    }
-    else {
+    } else {
       throw new Error('the second argument of Command must be a string or function');
     }
     if (typeof args === 'string') {
@@ -27,21 +25,20 @@ class Command {
 
     this.description = description;
   }
-  locate (resolvePath) {
+  locate(resolvePath) {
     if (this.package.remote) {
       const name = this.package.name;
       this.package.path = resolvePath.slice(0, resolvePath.lastIndexOf(name) + name.length);
       this.package.resolvePath = true;
-    }
-    else {
+    } else {
       logger.error('can not set resolve path on local package');
     }
   }
-  run () {
+  run() {
     const pkg = this.package;
     pkg.resolve();
     if (pkg.remote && pkg.need) {
-      installer[pkg.need](pkg).then((ignore) => {
+      installer[pkg.need](pkg).then(ignore => {
         if (!ignore) {
           pkg.resolve();
           if (pkg.remote && pkg.need) {
@@ -49,14 +46,15 @@ class Command {
           }
         }
         this._invoke();
-      }).catch((e) => {
+      }).catch(e => {
         logger.error(e);
       });
+    } else {
+      this._invoke();
     }
-    else { this._invoke(); }
   }
 
-  _invoke () {
+  _invoke() {
     const processArgv = process.argv;
     this.resolveProcessArgv();
     if (config.get('telemetry') === true) {
@@ -73,18 +71,17 @@ class Command {
     if (this.package.handler) {
       this.package.handler.apply({ command: this, options: argv }, argv._params.slice(2));
     }
-    if (this.package.updateCheck)installer.checkNewVersion(this.package);
+    if (this.package.updateCheck) installer.checkNewVersion(this.package);
     if (this.package.binPath) {
       if (argv.help) {
         this.spawnStart(this.package);
-      }
-      else {
+      } else {
         this.immediateStart(this.package);
       }
     }
   }
 
-  resolveProcessArgv () {
+  resolveProcessArgv() {
     let idx = 2;
     let remove = 0;
     if (this.command) {
@@ -97,16 +94,15 @@ class Command {
     process.argv = process.argv.concat(this.argv._options.map(e => e.text));
   }
 
-  immediateStart (packageInfo) {
+  immediateStart(packageInfo) {
     require(packageInfo.binPath);
   }
 
-  spawnStart (packageInfo) {
+  spawnStart(packageInfo) {
     let child;
     if (/\.js$/.test(packageInfo.binPath)) {
       child = childProcess.spawn('node', [packageInfo.binPath].concat(process.argv.slice(2)));
-    }
-    else {
+    } else {
       child = childProcess.spawn(packageInfo.binPath, process.argv.slice(2), {});
     }
     child.stderr.pipe(process.stderr);
@@ -120,8 +116,7 @@ class Command {
         callback();
       };
       child.stdout.pipe(handler).pipe(process.stdout);
-    }
-    else {
+    } else {
       child.stdout.pipe(process.stdout);
     }
   }
