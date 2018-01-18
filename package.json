@@ -1,9 +1,9 @@
 {
   "name": "xtoolkit",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
-  "main": "build/xtoolkit.js",
+  "main": "lib/xtoolkit.js",
   "scripts": {
     "lint": "eslint src --fix",
     "build": "babel src --out-dir lib",
