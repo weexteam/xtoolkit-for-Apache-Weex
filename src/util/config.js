@@ -1,6 +1,8 @@
 const util = require('./index');
 const fs = require('fs');
 const pathTool = require('path');
+const logger = require('./logger');
+
 let _config;
 try {
   _config = require(pathTool.join(util.homePath(), 'config.json'));
@@ -45,7 +47,7 @@ exports.save = function () {
 exports.display = function () {
   for (const key in _config) {
     if (_config.hasOwnProperty(key)) {
-      console.log(key, '=', _config[key]);
+      logger.log(key, '=', _config[key]);
     }
   }
 };

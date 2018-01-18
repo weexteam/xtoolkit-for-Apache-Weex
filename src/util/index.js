@@ -7,6 +7,9 @@ exports.npmInstall = function (name, cwd) {
   this.init();
   const config = require('./config');
   const args = ['install', name, '--loglevel=error'];
+  if (process.platform === 'win32') {
+    args.push('--no-optional');
+  }
   if (config.get('registry')) {
     args.push('--registry=' + config.get('registry'));
   }

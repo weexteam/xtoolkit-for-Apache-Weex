@@ -4,6 +4,9 @@ const Argv = require('./Argv');
 const pathTool = require('path');
 const Package = require('./package');
 const installer = require('./installer');
+const logger = require('./util/logger');
+const hook = require('./util/hook');
+const config = require('./util/config');
 class Command {
   constructor (command, packageInfo, args = [], description) {
     this.command = command;
@@ -31,7 +34,7 @@ class Command {
       this.package.resolvePath = true;
     }
     else {
-      console.error('can not set resolve path on local package');
+      logger.error('can not set resolve path on local package');
     }
   }
   run () {
@@ -47,16 +50,27 @@ class Command {
         }
         this._invoke();
       }).catch((e) => {
-        console.error(e);
+        logger.error(e);
       });
     }
     else { this._invoke(); }
   }
 
   _invoke () {
-    this.resolveProcessArgv();
-    const argv = new Argv(process.argv);
+    const processArgv = process.argv;
 
+    this.resolveProcessArgv();
+    if (config.get('telemetry')) {
+      hook.allowTarck();
+      processArgv.push('--telemetry');
+    }
+    const argv = new Argv(processArgv);
+    const userTrack = {
+      cmd: pathTool.basename(processArgv[1]),
+      subcmd: processArgv.length > 2 ? pathTool.basename(processArgv[2]) : '',
+      args: processArgv && processArgv.slice(1).forEach(e => pathTool.basename(e))
+    };
+    hook.record('/weex_tool.weex-toolkit.user_use', userTrack);
     if (this.package.handler) {
       this.package.handler.apply({ command: this, options: argv }, argv._params.slice(2));
     }

@@ -1,11 +1,9 @@
-'use strict';
-
-var spawn = require('child_process').spawn;
-var events = require('events');
-var fs = require('fs');
-var WIN = /^win/.test(process.platform);
-var LIN = /^linux/.test(process.platform);
-var MAC = /^darwin/.test(process.platform);
+const spawn = require('child_process').spawn;
+const events = require('events');
+const fs = require('fs');
+const WIN = /^win/.test(process.platform);
+const LIN = /^linux/.test(process.platform);
+const MAC = /^darwin/.test(process.platform);
 
 module.exports = Ping;
 
@@ -49,14 +47,14 @@ Ping.prototype.__proto__ = events.EventEmitter.prototype;
 // SEND A PING
 // ===========
 Ping.prototype.send = function (callback) {
-  var self = this;
+  const self = this;
   callback = callback || function (err, ms) {
     if (err) return self.emit('error', err);else return self.emit('result', ms);
   };
 
-  var _ended = void 0;
-  var _exited = void 0;
-  var _errored = void 0;
+  let _ended;
+  let _exited;
+  let _errored;
 
   this._ping = spawn(this._bin, this._args); // spawn the binary
 
@@ -88,9 +86,9 @@ Ping.prototype.send = function (callback) {
   });
 
   function onEnd() {
-    var stdout = this.stdout._stdout;
-    var stderr = this.stderr._stderr;
-    var ms = void 0;
+    const stdout = this.stdout._stdout;
+    const stderr = this.stderr._stderr;
+    let ms;
 
     if (stderr) {
       return callback(new Error(stderr));
@@ -108,7 +106,7 @@ Ping.prototype.send = function (callback) {
 // CALL Ping#send(callback) ON A TIMER
 // ===================================
 Ping.prototype.start = function (callback) {
-  var self = this;
+  const self = this;
   this._i = setInterval(function () {
     self.send(callback);
   }, self._options.interval || 5000);

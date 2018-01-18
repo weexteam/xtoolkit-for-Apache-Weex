@@ -42,7 +42,6 @@ npm.stdout.on('data', (data) => {
 function done () {
   if (latestVersion && packageJson && semver.gt(latestVersion, packageJson.version)) {
     packageJson.newVersion = latestVersion;
-    console.log(latestVersion);
     fs.writeFile(pathTool.join(path, 'package.json'), JSON.stringify(packageJson, null, 4), function () {
     });
   }

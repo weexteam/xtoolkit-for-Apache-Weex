@@ -1,25 +1,26 @@
-'use strict';
-
-var childProcess = require('child_process');
-var fs = require('fs');
-var pathTool = require('path');
-var chalk = require('chalk');
+const childProcess = require('child_process');
+const fs = require('fs');
+const pathTool = require('path');
+const chalk = require('chalk');
 
 exports.npmInstall = function (name, cwd) {
   this.init();
-  var config = require('./config');
-  var args = ['install', name, '--loglevel=error'];
+  const config = require('./config');
+  const args = ['install', name, '--loglevel=error'];
+  if (process.platform === 'win32') {
+    args.push('--no-optional');
+  }
   if (config.get('registry')) {
     args.push('--registry=' + config.get('registry'));
   }
-  var result = childProcess.spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
+  const result = childProcess.spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
     stdio: ['inherit', 'ignore', 'inherit'],
     cwd: cwd
   });
   return result;
 };
 exports.homePath = function () {
-  var home = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
+  const home = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
   return pathTool.join(home, '.xtoolkit');
 };
 
@@ -27,7 +28,7 @@ exports.modulePath = function () {
   return pathTool.join(this.homePath(), 'node_modules');
 };
 exports.init = function () {
-  var nodeModulePath = this.modulePath();
+  const nodeModulePath = this.modulePath();
   if (!fs.existsSync(this.homePath())) {
     try {
       fs.mkdirSync(this.homePath());

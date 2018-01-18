@@ -1,3 +1,5 @@
+const logger = require('./util/logger');
+
 class Argv {
   constructor (args, def) {
     this._def = def;
@@ -51,7 +53,7 @@ class Argv {
     this.options[name] = value;
   }
   dump () {
-    console.log(this._options, this._params);
+    logger.log(this._options, this._params);
   }
 }
 module.exports = Argv;

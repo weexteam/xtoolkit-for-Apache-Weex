@@ -3,8 +3,11 @@ const Command = require('./Command');
 const Argv = require('./Argv');
 const chalk = require('chalk');
 const config = require('./util/config');
+const env = require('./util/env');
 const installer = require('./installer');
 const path = require('path');
+const logger = require('./util/logger');
+
 class XToolkit {
   constructor () {
     this.begin = false;
@@ -12,10 +15,22 @@ class XToolkit {
     this.configCommandName = 'config';
     this.updateCommandName = 'update';
     this.bindCommandName = 'xbind';
+    this.init();
   }
-
-  _usage () {
-
+  init () {
+    // init to cache local env
+    env.getVersionOf('npm', (v) => {
+      config.set('npm', v);
+      config.save();
+    });
+    env.getVersionOf('node', (v) => {
+      config.set('node', v);
+      config.save();
+    });
+    env.getVersionOf('weex', (v) => {
+      config.set('weex', v);
+      config.save();
+    });
   }
 
   usage (func) {
@@ -71,7 +86,7 @@ class XToolkit {
   version (ver) {
     if (typeof ver !== 'function') {
       this._version = function () {
-        console.log('   v' + ver);
+        logger.log('   v' + ver);
       };
     }
     else {
@@ -95,7 +110,7 @@ class XToolkit {
       this.currentCommand.locate(resolvePath);
     }
     else {
-      console.error('resolve(...) must after a command(...)');
+      logger.error('resolve(...) must after a command(...)');
     }
   }
 
@@ -108,7 +123,7 @@ class XToolkit {
           map[command.package.name] = true;
           if (fs.existsSync(command.package.path)) {
             const version = JSON.parse(fs.readFileSync(path.join(command.package.path, 'package.json')).toString()).version;
-            console.log(chalk.gray(' - ' + command.package.name + ' : v' + version));
+            logger.log(chalk.gray(' - ' + command.package.name + ' : v' + version));
           }
         }
       }
@@ -136,14 +151,9 @@ class XToolkit {
     if (this._commands[cmd]) {
       this._commands[cmd].run();
     }
-    else if (this._commands['']) {
-      if ((argv.version || argv.v) && this._version) {
-        this._version();
-        this.showSubVersion();
-      }
-      else {
-        this._commands[''].run();
-      }
+    if ((argv.version || argv.v) && this._version) {
+      this._version();
+      this.showSubVersion();
     }
   }
 }

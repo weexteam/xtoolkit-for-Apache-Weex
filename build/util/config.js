@@ -1,18 +1,18 @@
-'use strict';
+const util = require('./index');
+const fs = require('fs');
+const pathTool = require('path');
+const logger = require('./logger');
 
-var util = require('./index');
-var fs = require('fs');
-var pathTool = require('path');
-var _config = void 0;
+let _config;
 try {
   _config = require(pathTool.join(util.homePath(), 'config.json'));
 } catch (e) {
   _config = {};
 }
 exports.get = function (prop, defaultValue) {
-  var props = prop.split('.');
-  var p = props.shift();
-  var cur = _config;
+  const props = prop.split('.');
+  let p = props.shift();
+  let cur = _config;
   while (p) {
     cur = cur[p];
     if (cur === undefined || cur === null) break;
@@ -21,9 +21,9 @@ exports.get = function (prop, defaultValue) {
   return cur || defaultValue;
 };
 exports.set = function (prop, value) {
-  var props = prop.split('.');
-  var p = props.shift();
-  var cur = _config;
+  const props = prop.split('.');
+  let p = props.shift();
+  let cur = _config;
   while (p) {
     if (props.length === 0) {
       if (value !== undefined) {
@@ -44,9 +44,9 @@ exports.save = function () {
   fs.writeFileSync(pathTool.join(util.homePath(), 'config.json'), JSON.stringify(_config, null, 4));
 };
 exports.display = function () {
-  for (var key in _config) {
+  for (const key in _config) {
     if (_config.hasOwnProperty(key)) {
-      console.log(key, '=', _config[key]);
+      logger.log(key, '=', _config[key]);
     }
   }
 };

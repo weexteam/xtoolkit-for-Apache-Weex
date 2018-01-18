@@ -3,8 +3,10 @@ const chalk = require('chalk');
 const boxen = require('boxen');
 const spawn = require('child_process').spawn;
 const pathTool = require('path');
+const logger = require('../util/logger');
+
 exports.install = function (pkg) {
-  console.log(`This command need to install ${chalk.white.bgBlue(pkg.name)}. Installing...`);
+  logger.log(`This command need to install ${chalk.white.bgBlue(pkg.name)}. Installing...`);
   let installer;
   return new Promise((resolve, reject) => {
     try {
@@ -24,7 +26,7 @@ exports.update = function (pkg) {
     msg = '\n';
     msg += `Update available ${chalk.grey(pkg.version)} → ${chalk.green(pkg.newVersion)}\n`;
     msg += `Run ${chalk.blue('weex update ' + pkg.name + '@' + pkg.newVersion)} to update\n`;
-    console.log(boxen(msg, {
+    logger.log(boxen(msg, {
       padding: 1,
       borderColor: 'yellow',
       margin: 1
@@ -74,6 +76,6 @@ exports.checkNewVersion = function (pkg) {
     child.unref();
   }
   catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 };

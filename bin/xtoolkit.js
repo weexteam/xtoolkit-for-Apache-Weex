@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-'use strict';
 
-var program = require('commander');
-var util = require('../build/util');
-var fs = require('fs');
-var pathTool = require('path');
+const program = require('commander');
+const util = require('../build/util');
+const fs = require('fs');
+const pathTool = require('path');
 program.command('install <name>').action(function (name) {
   util.init();
   if (!fs.existsSync(pathTool.join(util.modulePath(), name.split('@')[0]))) {

@@ -3,6 +3,7 @@ const util = require('../util');
 const fs = require('fs');
 const semver = require('semver');
 const Package = require('./index');
+
 class NpmPackage extends Package {
   constructor (meta, handler) {
     super('npm', meta, handler);
