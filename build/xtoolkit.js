@@ -7,6 +7,7 @@ const env = require('./util/env');
 const installer = require('./installer');
 const path = require('path');
 const logger = require('./util/logger');
+const ask = require('./util/ask');
 
 class XToolkit {
   constructor() {
@@ -136,18 +137,26 @@ class XToolkit {
       this._commands[cmd.name] = new Command(cmd.name, cmd.package, cmd.args);
     });
   }
-
-  _done() {
-    this._resolveInternalCommand();
-    this._resolveBindCommand();
-    const argv = new Argv(process.argv.slice(2));
-    const cmd = argv._params[0];
+  _runCmd(cmd, argv) {
     if (this._commands[cmd]) {
       this._commands[cmd].run();
     }
     if ((argv.version || argv.v) && this._version) {
       this._version();
       this.showSubVersion();
+    }
+  }
+  _done() {
+    this._resolveInternalCommand();
+    this._resolveBindCommand();
+    const argv = new Argv(process.argv.slice(2));
+    const cmd = argv._params[0];
+    if (typeof config.get('telemetry') === 'undefined') {
+      ask().then(() => {
+        this._runCmd(cmd, argv);
+      });
+    } else {
+      this._runCmd(cmd, argv);
     }
   }
 }

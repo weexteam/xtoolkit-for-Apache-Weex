@@ -58,9 +58,9 @@ class Command {
 
   _invoke () {
     const processArgv = process.argv;
-
     this.resolveProcessArgv();
-    if (config.get('telemetry')) {
+    console.log(config.get('telemetry') === true);
+    if (config.get('telemetry') === true) {
       hook.allowTarck();
       processArgv.push('--telemetry');
     }

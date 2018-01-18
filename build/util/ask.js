@@ -1,12 +1,9 @@
-const util = require('../util');
-const config = require('../util/config');
 const inquirer = require('inquirer');
-const logger = require('../util/logger');
+const config = require('./config');
+const logger = require('./logger');
 
 const taobao = `http://registry.npm.taobao.org`;
 const npm = `http://registry.npmjs.org`;
-
-util.init();
 
 function showPrompt() {
   const questions = [{
@@ -28,7 +25,11 @@ function showPrompt() {
   });
 }
 
-showPrompt().then(() => {
-  logger.info(`You can config this configuration again by using \`weex config [key] [value]\``);
-  logger.success(`Enjoying your coding time!`);
-});
+const ask = () => {
+  return showPrompt().then(() => {
+    logger.info(`You can config this configuration again by using \`weex config [key] [value]\``);
+    logger.success(`Enjoying your coding time!\n`);
+  });
+};
+
+module.exports = ask;

@@ -1,14 +1,13 @@
 {
   "name": "xtoolkit",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
   "main": "build/xtoolkit.js",
   "scripts": {
-    "postinstall": "node ./src/hook/post_install.js",
     "lint": "eslint src --fix",
-    "build": "babel src --out-dir build",
-    "dev": "babel src --out-dir build --watch",
+    "build": "babel src --out-dir lib",
+    "dev": "babel src --out-dir lib --watch",
     "prepublish": "npm run lint && npm run build"
   },
   "repository": {
