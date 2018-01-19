@@ -1,7 +1,6 @@
 const request = require('request');
 const dns = require('dns');
 const os = require('os');
-const config = require('./config');
 let shouldBeTelemetry = false;
 
 exports.record = function (logkey, gokey) {
@@ -10,9 +9,7 @@ exports.record = function (logkey, gokey) {
   }
   const defaultOptions = {
     os: os.platform(),
-    node: config.get('node').version,
-    npm: config.get('npm').version,
-    version: config.get('weex')
+    node: process.version
   };
   gokey = Object.assign(defaultOptions, gokey);
   let url = 'http://gm.mmstat.com' + logkey + '?';

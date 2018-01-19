@@ -3,7 +3,6 @@ const Command = require('./Command');
 const Argv = require('./Argv');
 const chalk = require('chalk');
 const config = require('./util/config');
-const env = require('./util/env');
 const installer = require('./installer');
 const path = require('path');
 const logger = require('./util/logger');
@@ -16,30 +15,10 @@ class XToolkit {
     this.configCommandName = 'config';
     this.updateCommandName = 'update';
     this.bindCommandName = 'xbind';
-    this.init();
-  }
-  init () {
-    // init to cache local env
-    env.getVersionOf('npm', (v) => {
-      config.set('npm', v);
-      config.save();
-    });
-    env.getVersionOf('node', (v) => {
-      config.set('node', v);
-      config.save();
-    });
-    env.getVersionOf('weex', (v) => {
-      config.set('weex', v);
-      config.save();
-    });
   }
 
   usage (func) {
     this._usage = func;
-  }
-
-  install (name) {
-
   }
 
   _bindCommand (name, info, args) {
