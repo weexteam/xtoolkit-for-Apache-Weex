@@ -42,8 +42,20 @@ exports.set = function (prop, value) {
   return value;
 };
 exports.save = function () {
-  fs.writeFileSync(pathTool.join(util.homePath(), 'config.json'), JSON.stringify(_config, null, 4));
+  const configPath = pathTool.join(util.homePath(), 'config.json');
+  if (!fs.existsSync(configPath)) {
+    fs.open(configPath, 'w+', '0666', (err, fd) => {
+      if (err) {
+        logger.error(err);
+      }
+      fs.writeFileSync(configPath, JSON.stringify(_config, null, 2));
+    });
+  }
+  else {
+    fs.writeFileSync(configPath, JSON.stringify(_config, null, 2));
+  }
 };
+
 exports.display = function () {
   for (const key in _config) {
     if (_config.hasOwnProperty(key)) {
