@@ -1,6 +1,7 @@
 const util = require('./index');
 const fs = require('fs');
 const pathTool = require('path');
+const mkdirp = require('mkdirp');
 const logger = require('./logger');
 
 let _config;
@@ -43,6 +44,13 @@ exports.set = function (prop, value) {
 };
 exports.save = function () {
   const configPath = pathTool.join(util.homePath(), 'config.json');
+  if (!fs.existsSync(util.homePath())) {
+    mkdirp(util.homePath(), function (err) {
+      if (err) {
+        logger.error(err);
+      }
+    });
+  }
   if (!fs.existsSync(configPath)) {
     fs.open(configPath, 'w+', '0666', (err, fd) => {
       if (err) {
