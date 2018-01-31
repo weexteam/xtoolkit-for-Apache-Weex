@@ -20,6 +20,9 @@ exports.get = function (prop, defaultValue) {
     if (cur === undefined || cur === null) break;
     p = props.shift();
   }
+  if (typeof cur === 'boolean') {
+    return cur;
+  }
   return cur || defaultValue;
 };
 exports.set = function (prop, value) {
