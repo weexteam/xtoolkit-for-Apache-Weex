@@ -20,12 +20,35 @@ exports.get = function (prop, defaultValue) {
     if (cur === undefined || cur === null) break;
     p = props.shift();
   }
-  return cur || defaultValue;
+  if (typeof cur !== 'undefined') {
+    if (cur === 'true') {
+      return true;
+    }
+    else if (cur === 'false') {
+      return false;
+    }
+  }
+  return cur || (typeof cur === 'boolean' ? cur : defaultValue);
 };
 exports.set = function (prop, value) {
   const props = prop.split('.');
   let p = props.shift();
   let cur = _config;
+  if (!value) {
+    if (typeof _config[prop] === 'string') {
+      logger.log(`${prop} = "${_config[prop]}"`);
+    }
+    else {
+      logger.log(`${prop} = ${_config[prop]}`);
+    }
+    return;
+  }
+  if (typeof value === 'string' && value === 'true') {
+    value = true;
+  }
+  else if (typeof value === 'string' && value === 'false') {
+    value = false;
+  }
   while (p) {
     if (props.length === 0) {
       if (value !== undefined) { cur[p] = value; }
@@ -67,7 +90,12 @@ exports.save = function () {
 exports.display = function () {
   for (const key in _config) {
     if (_config.hasOwnProperty(key)) {
-      logger.log(key, '=', _config[key]);
+      if (typeof _config[key] === 'string') {
+        logger.log(`${key} = "${_config[key]}"`);
+      }
+      else {
+        logger.log(`${key} = ${_config[key]}`);
+      }
     }
   }
 };

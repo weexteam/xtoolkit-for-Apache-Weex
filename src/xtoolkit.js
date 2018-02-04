@@ -59,7 +59,6 @@ class XToolkit {
     }
     else {
       config.display();
-      // throw new Error('config name can not be empty')
     }
   }
 

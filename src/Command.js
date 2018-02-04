@@ -59,7 +59,7 @@ class Command {
   _invoke () {
     const processArgv = process.argv;
     this.resolveProcessArgv();
-    if (config.get('telemetry') === 'true') {
+    if (config.get('telemetry')) {
       hook.allowTarck();
       processArgv.push('--telemetry');
     }
@@ -95,6 +95,9 @@ class Command {
 
     process.argv.splice.apply(process.argv, [idx, remove].concat(this.argv._params));
     process.argv = process.argv.concat(this.argv._options.map(e => e.text));
+    if (config.get('telemetry')) {
+      process.argv.push('--telemetry');
+    }
   }
 
   immediateStart (packageInfo) {
