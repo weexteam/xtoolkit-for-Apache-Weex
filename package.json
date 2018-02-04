@@ -1,6 +1,6 @@
 {
   "name": "xtoolkit",
-  "version": "0.2.21",
+  "version": "0.2.22",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
   "main": "lib/xtoolkit.js",
@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
+    "babel-eslint": "^8.2.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^4.9.0"
+    "eslint": "^4.17.0"
   }
 }
