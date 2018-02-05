@@ -63,6 +63,12 @@ exports.set = function (prop, value) {
     }
     p = props.shift();
   }
+  if (typeof value === 'string') {
+    logger.log(`Set ${prop} = "${value}"`);
+  }
+  else {
+    logger.log(`Set ${prop} = ${value}`);
+  }
   return value;
 };
 exports.save = function () {

@@ -1,6 +1,7 @@
 const request = require('request');
 const dns = require('dns');
 const os = require('os');
+const ip = require('ip').address();
 let shouldBeTelemetry = false;
 
 exports.record = function (logkey, gokey) {
@@ -9,7 +10,8 @@ exports.record = function (logkey, gokey) {
   }
   const defaultOptions = {
     os: os.platform(),
-    node: process.version
+    node: process.version,
+    ip: ip
   };
   gokey = Object.assign(defaultOptions, gokey);
   let url = 'http://gm.mmstat.com' + logkey + '?';
