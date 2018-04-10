@@ -1,27 +1,24 @@
-const spawn = require('child_process').spawn;
+const spawn = require('cross-spawn');
 const semver = require('semver');
 const fs = require('fs');
 const pathTool = require('path');
+const evalExpression = require('../util/eval');
 const config = require('../util/config');
 const name = process.argv[2];
 const path = process.argv[3];
 const registry = config.get('registry');
 let packageJson;
+let latestChangelog;
 let latestVersion;
-const args = ['show', name, 'version'];
+
+const args = ['info', name];
 
 if (registry && registry.indexOf('http') === 0) {
   args.push('--registry=' + registry);
 }
+const npm = spawn('npm', args);
 
-const npm = spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', args);
-fs.readFile(pathTool.join(path, 'package.json'), function (err, data) {
-  if (!err) {
-    packageJson = JSON.parse(data);
-    done();
-  }
-});
-function kill () {
+const kill = () => {
   if (npm.stdout) { npm.stdout.destroy(); }
 
   if (npm.stderr) { npm.stderr.destroy(); }
@@ -32,17 +29,32 @@ function kill () {
   catch (e) {
 
   }
-}
+};
+
 const timer = setTimeout(kill, 15000);
+
+fs.readFile(pathTool.join(path, 'package.json'), function (err, data) {
+  if (!err) {
+    packageJson = JSON.parse(data);
+    done();
+  }
+});
+
+const done = () => {
+  if (latestVersion && packageJson && semver.gt(latestVersion, packageJson.version)) {
+    packageJson.newVersion = latestVersion;
+    if (latestChangelog) {
+      packageJson.newChangeLog = latestChangelog;
+    }
+    fs.writeFile(pathTool.join(path, 'package.json'), JSON.stringify(packageJson, null, 2), function () {
+    });
+  }
+};
+
 npm.stdout.on('data', (data) => {
-  latestVersion = data.toString().trim();
+  const npminfo = evalExpression(data.toString().trim().replace('\n', ''));
+  latestVersion = npminfo['dist-tags'].latest;
+  latestChangelog = npminfo['changelog'] || [];
   clearTimeout(timer);
   done();
 });
-function done () {
-  if (latestVersion && packageJson && semver.gt(latestVersion, packageJson.version)) {
-    packageJson.newVersion = latestVersion;
-    fs.writeFile(pathTool.join(path, 'package.json'), JSON.stringify(packageJson, null, 4), function () {
-    });
-  }
-}

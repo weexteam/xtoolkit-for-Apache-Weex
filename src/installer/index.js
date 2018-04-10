@@ -26,6 +26,15 @@ exports.update = function (pkg) {
     msg = '\n';
     msg += `Update available ${chalk.grey(pkg.version)} → ${chalk.green(pkg.newVersion)}\n`;
     msg += `Run ${chalk.blue('weex update ' + pkg.name + '@' + pkg.newVersion)} to update\n`;
+    if (pkg.newChangeLog && pkg.newChangeLog.messages.length > 0) {
+      msg += `\n${chalk.yellow(`CHANGELOG:`)}\n`;
+      for (const i in pkg.newChangeLog.messages) {
+        msg += `\n${chalk.yellow(`- ${pkg.newChangeLog.messages[i]}`)}`;
+      }
+      if (pkg.newChangeLog.url) {
+        msg += `\n${chalk.grey(`\nMore detail you can see: ${pkg.newChangeLog.url}`)}`;
+      }
+    }
     logger.log(boxen(msg, {
       padding: 1,
       borderColor: 'yellow',
@@ -69,7 +78,7 @@ exports.checkNewVersion = function (pkg) {
     }
     else {
       child = spawn('node', [pathTool.join(__dirname, pkg.schema + '_update_checker.js'), pkg.name, pkg.path], {
-        stdio: 'ignore',
+        stdio: [0, 1, 2],
         detached: true
       });
     }

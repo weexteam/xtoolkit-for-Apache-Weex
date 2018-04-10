@@ -26,6 +26,7 @@ class NpmPackage extends Package {
           // this.packageJson = packageJson
           this.version = packageJson.version;
           this.newVersion = packageJson.newVersion;
+          this.newChangeLog = packageJson.newChangeLog;
           if (semver.lte(packageJson.newVersion || '0.0.0', packageJson.version)) { this.need = false; }
           else { this.need = 'update'; }
         }

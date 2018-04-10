@@ -1,4 +1,4 @@
-const childProcess = require('child_process');
+const spawn = require('cross-spawn');
 const fs = require('fs');
 const pathTool = require('path');
 const chalk = require('chalk');
@@ -10,12 +10,27 @@ exports.npmInstall = function (name, cwd) {
   if (config.get('registry')) {
     args.push('--registry=' + config.get('registry'));
   }
-  const result = childProcess.spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', args, {
+  const result = spawn.sync('npm', args, {
     stdio: ['inherit', 'ignore', 'inherit'],
     cwd: cwd
   });
   return result;
 };
+
+exports.yarnInstall = function (name, cwd) {
+  this.init();
+  const config = require('./config');
+  const args = ['add', name, '--loglevel=error'];
+  if (config.get('registry')) {
+    args.push('--registry=' + config.get('registry'));
+  }
+  const result = spawn.sync('yarn', args, {
+    stdio: ['inherit', 'ignore', 'inherit'],
+    cwd: cwd
+  });
+  return result;
+};
+
 exports.homePath = function () {
   const home = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
   return pathTool.join(home, '.xtoolkit');
@@ -24,6 +39,7 @@ exports.homePath = function () {
 exports.modulePath = function () {
   return pathTool.join(this.homePath(), 'node_modules');
 };
+
 exports.init = function () {
   const nodeModulePath = this.modulePath();
   if (!fs.existsSync(this.homePath())) {
