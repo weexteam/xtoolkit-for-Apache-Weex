@@ -107,6 +107,7 @@ class XToolkit {
         }
       }
     }
+    logger.log('');
   }
 
   _resolveInternalCommand () {
