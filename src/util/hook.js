@@ -13,7 +13,7 @@ exports.record = function (logkey, goldkey) {
     node: process.version
   };
   goldkey = Object.assign(defaultOptions, goldkey);
-  dns.resolve('gm.mmstat.com', function (err) {
+  dns.resolve('http://gm.mmstat.com', function (err) {
     if (!err) {
       request({
         method: 'GET',
@@ -60,7 +60,8 @@ exports.record = function (logkey, goldkey) {
               request({
                 method: 'GET',
                 uri: `http://gm.mmstat.com/weex_tool.weex-toolkit.error_track?error=${err}&stack=${err && err.stack}`
-              }).then(() => {});
+              })
+                .then(() => {});
             });
         })
         .catch(function (err) {

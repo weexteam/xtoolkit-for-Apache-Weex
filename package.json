@@ -1,6 +1,6 @@
 {
   "name": "xtoolkit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
   "main": "lib/xtoolkit.js",
