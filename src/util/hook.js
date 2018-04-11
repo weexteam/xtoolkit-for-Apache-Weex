@@ -1,6 +1,7 @@
 const request = require('request-promise');
 const dns = require('dns');
 const os = require('os');
+const utf8 = require('utf8');
 let shouldBeTelemetry = false;
 
 exports.record = function (logkey, goldkey) {
@@ -24,15 +25,15 @@ exports.record = function (logkey, goldkey) {
             method: 'GET',
             uri: `http://ip.taobao.com/service/getIpInfo2.php?ip=${remote.origin}`
           }).then((body) => {
-          // Request succeeded but might as well be a 404
-          // Usually combined with resolveWithFullResponse = true to check response.statusCode
+            // Request succeeded but might as well be a 404
+            // Usually combined with resolveWithFullResponse = true to check response.statusCode
             body = JSON.parse(body);
             goldkey['ip'] = remote.origin;
-            goldkey['country'] = body.data.country;
-            goldkey['region'] = body.data.region;
-            goldkey['city'] = body.data.city;
-            goldkey['county'] = body.data.county;
-            goldkey['isp'] = body.data.isp;
+            goldkey['country'] = utf8.encode(body.data.country);
+            goldkey['region'] = utf8.encode(body.data.region);
+            goldkey['city'] = utf8.encode(body.data.city);
+            goldkey['county'] = utf8.encode(body.data.county);
+            goldkey['isp'] = utf8.encode(body.data.isp);
             goldkey['_g_encode'] = 'utf-8';
             let url = `http://gm.mmstat.com${logkey}?`;
             for (const i in goldkey) {

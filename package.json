@@ -1,6 +1,6 @@
 {
   "name": "xtoolkit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
   "main": "lib/xtoolkit.js",
@@ -24,7 +24,8 @@
     "cross-spawn": "^6.0.4",
     "ip": "^1.1.5",
     "request": "^2.85.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
