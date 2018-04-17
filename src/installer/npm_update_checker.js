@@ -10,6 +10,7 @@ const registry = config.get('registry');
 let packageJson;
 let latestChangelog;
 let latestVersion;
+let packageInfomation;
 
 const args = ['info', name];
 
@@ -51,10 +52,22 @@ const done = () => {
   }
 };
 
-npm.stdout.on('data', (data) => {
-  const npminfo = evalExpression(data.toString().trim().replace('\n', ''));
-  latestVersion = npminfo['dist-tags'].latest;
-  latestChangelog = npminfo['changelog'] || [];
+npm.stdout.on('data', data => {
+  packageInfomation += data.toString().trim().replace(/\.\.\.\s+\d+\s+more\s+items/ig, '');
+});
+
+npm.stdout.on('close', data => {
+  let npminfo;
+  try {
+    npminfo = evalExpression(packageInfomation);
+  }
+  catch (e) {
+    return;
+  }
+  if (npminfo) {
+    latestVersion = npminfo['dist-tags'].latest;
+    latestChangelog = npminfo['changelog'] || [];
+  }
   clearTimeout(timer);
   done();
 });
