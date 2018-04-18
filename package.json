@@ -1,6 +1,6 @@
 {
   "name": "xtoolkit",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "bin": "bin/xtoolkit.js",
   "description": "a toolkit for creating toolkit",
   "main": "lib/xtoolkit.js",
@@ -25,6 +25,7 @@
     "ip": "^1.1.5",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
+    "shelljs": "^0.8.1",
     "utf8": "^3.0.0"
   },
   "devDependencies": {
