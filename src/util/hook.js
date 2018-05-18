@@ -27,7 +27,6 @@ exports.record = function (logkey, goldkey) {
         json: true
       })
         .then((body) => {
-          console.log(body);
           // Request succeeded but might as well be a 404
           // Usually combined with resolveWithFullResponse = true to check response.statusCode
           goldkey['ip'] = body.data.ip;
