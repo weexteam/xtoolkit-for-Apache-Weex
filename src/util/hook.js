@@ -43,7 +43,6 @@ exports.record = function (logkey, goldkey) {
             }
           }
           url += `t=${(new Date()).getTime()}`;
-          console.log(url);
           request({
             method: 'GET',
             uri: url
