@@ -1,6 +1,6 @@
 {
   "name": "xtoolkit",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -3564,6 +3564,11 @@
       "version": "1.0.4",
       "resolved": "https://registry.npmjs.org/nice-try/-/nice-try-1.0.4.tgz",
       "integrity": "sha512-2NpiFHqC87y/zFke0fC0spBXL3bBsoh/p5H1EFhshxjCR5+0g2d6BiXbUFz9v1sAcxsk2htp2eQnNIci2dIYcA=="
+    },
+    "node-machine-id": {
+      "version": "1.1.10",
+      "resolved": "https://registry.npmjs.org/node-machine-id/-/node-machine-id-1.1.10.tgz",
+      "integrity": "sha512-6SVxo3Ic2Qc09z1rCJh3No7ubizPLszImsMQnZZWfzeOC6SYU4orN214++c3ikB8uaP/A6dwSlO88A3ohI5oNA=="
     },
     "normalize-path": {
       "version": "2.1.1",
