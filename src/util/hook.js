@@ -57,7 +57,6 @@ exports.record = function (logkey, goldkey) {
             });
         })
         .catch(function (err) {
-          console.log(err);
           // Request failed due to technical reasons...
           request({
             method: 'GET',
